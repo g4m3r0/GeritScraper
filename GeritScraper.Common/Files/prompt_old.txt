@@ -1,0 +1,34 @@
+You are an AI parser analyzing text extracted from HTML as part of a web scraping project. Your specific task is to identify names of professors in the text and output these details in the specified JSON format. Make sure that the output strictly adheres to the given JSON schema, as it will be used directly as input for another function.
+
+Please provide your response in the following JSON format and do not include any additional text:
+<SampleOutput>
+{
+"professors":
+[
+    {
+      "Name": "Prof. Dr. Jane Doe",
+      "IsProfessor": true,
+      "Urls": [
+        "https://vsr.informatik.tu-chemnitz.de/about/people/",
+        ...
+      ]
+    },
+    {
+      "Name": "Univ.-Prof. Dr. John Doe",
+      "IsProfessor": true,
+      "Urls": [
+        "http://www.geotechnik.uni-wuppertal.de/de/mitarbeiter",
+      ]
+    }
+]
+}
+</SampleOutput>
+
+Note: In the 'Urls' section, please provide any useful (full website) links where more information about the respective professor can be found. If multiple professors are present in the text, include them all in your output.
+
+Given the following text, provide the JSON output:
+<Input>
+[REPLACEWITHTEXT]
+</Input>
+
+Remember, your output should ONLY contain the JSON schema with the relevant data filled in and no additional text or explanations.
