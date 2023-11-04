@@ -9,6 +9,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GeritScraper.InstituteHtml"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GeritScraper.Common", "GeritScraper.Common\GeritScraper.Common.csproj", "{61DC6A05-E976-4324-B8AB-B5FFCD293F83}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GeritScraper.JsonExtractor", "GeritScraper.JsonExtractor\GeritScraper.JsonExtractor.csproj", "{64FD4F66-B4AF-47FE-AD33-2A49138EB0CF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GeritScraper.JsonExtractor.Console.Test", "GeritScraper.JsonExtractor.Console.Test\GeritScraper.JsonExtractor.Console.Test.csproj", "{F72B693E-7E67-4118-9201-A3AB5F3EE2A9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +31,14 @@ Global
 		{61DC6A05-E976-4324-B8AB-B5FFCD293F83}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{61DC6A05-E976-4324-B8AB-B5FFCD293F83}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{61DC6A05-E976-4324-B8AB-B5FFCD293F83}.Release|Any CPU.Build.0 = Release|Any CPU
+		{64FD4F66-B4AF-47FE-AD33-2A49138EB0CF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{64FD4F66-B4AF-47FE-AD33-2A49138EB0CF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{64FD4F66-B4AF-47FE-AD33-2A49138EB0CF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{64FD4F66-B4AF-47FE-AD33-2A49138EB0CF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F72B693E-7E67-4118-9201-A3AB5F3EE2A9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F72B693E-7E67-4118-9201-A3AB5F3EE2A9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F72B693E-7E67-4118-9201-A3AB5F3EE2A9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F72B693E-7E67-4118-9201-A3AB5F3EE2A9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

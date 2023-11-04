@@ -19,7 +19,7 @@ public class Program
         var dataPath = Directory.GetCurrentDirectory() + "\\Input\\institutionen_gerit.csv";
         var urls = LoadUrlsFromCsv(dataPath);
 
-        var outputPath = Directory.GetCurrentDirectory() + "\\Output\\";
+        var outputPath = Directory.GetCurrentDirectory() + "\\Output_new\\";
 
         if (!Directory.Exists(outputPath))
         {
@@ -28,8 +28,10 @@ public class Program
 
         await Console.Out.WriteLineAsync($"Loaded {urls.Count} URLs.");
 
+        // Loop each institute
         foreach (var url in urls)
         {
+            // Get the json string from the main institute
             var jsonString = await ScrapeJsonStringFromUrlAsync(url);
 
             if (!string.IsNullOrEmpty(jsonString))
