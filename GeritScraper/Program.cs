@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Globalization;
 using System.IO;
+using System.Text;
 using System.Text.RegularExpressions;
 using CsvHelper;
 using GeritScraper.Models;
@@ -11,28 +12,56 @@ public class Program
 {
     static async Task Main(string[] args)
     {
-        await ParseFilesForInstitutes();
-
+        //await ParseFilesForInstitutes();
+        
+        // Scrapes the DFG GERiT institutes database file for the IDs of the institutions
+        // Then scraping the DFG GERiT web catalog according to these IDs to extract the JSON object representation of these institutions
         await Console.Out.WriteLineAsync("Starting the Scraper");
-        await Console.Out.WriteLineAsync("Loading URLs from CSV datasource.");
 
-        var dataPath = Directory.GetCurrentDirectory() + "\\Input\\institutionen_gerit.csv";
-        var urls = LoadUrlsFromCsv(dataPath);
-
+        var databasePath = Directory.GetCurrentDirectory() + "\\Input\\institutionen_gerit.csv";
         var outputPath = Directory.GetCurrentDirectory() + "\\Output_new\\";
 
+        var institutionUrls = await ParseGeritDatabaseForUrls(databasePath);
+        await ScrapeUrlsAsync(institutionUrls, outputPath);
+
+        await Console.Out.WriteLineAsync($"Finished scraping all URLs!");
+        Console.ReadLine();
+    }
+
+    static async Task<List<string>> ParseGeritDatabaseForUrls(string databasePath)
+    {
+        await Console.Out.WriteLineAsync("Loading URLs from CSV datasource.");
+        var urls = LoadUrlsFromCsv(databasePath);
+
+        await Console.Out.WriteLineAsync($"Loaded {urls.Count} URLs.");
+
+        return urls;
+    }
+
+    static async Task ScrapeUrlsAsync(List<string> Urls, string outputPath)
+    {
         if (!Directory.Exists(outputPath))
         {
             Directory.CreateDirectory(outputPath);
         }
 
-        await Console.Out.WriteLineAsync($"Loaded {urls.Count} URLs.");
+        StringBuilder scrapeLog = new();
 
         // Loop each institute
-        foreach (var url in urls)
+        foreach (var url in Urls)
         {
             // Get the json string from the main institute
-            var jsonString = await ScrapeJsonStringFromUrlAsync(url);
+            var jsonString = string.Empty;
+            var lastErrorMessage = string.Empty;
+
+            try
+            {
+                jsonString = await ScrapeJsonStringFromUrlAsync(url);
+            }
+            catch (Exception e)
+            {
+                lastErrorMessage = e.Message;
+            }
 
             if (!string.IsNullOrEmpty(jsonString))
             {
@@ -46,17 +75,17 @@ public class Program
 
                 var outputFileName = outputPath + universityName + "\\" + url.Split('/').Last() + ".json";
                 await File.WriteAllTextAsync(outputFileName, jsonString);
-
-                // await Console.Out.WriteLineAsync($"Press Enter to scrape next");
-                // Console.ReadLine();
-            } else
+            }
+            else
             {
                 await Console.Out.WriteLineAsync($"Failed - Scraped {url}.");
             }
-        }
 
-        await Console.Out.WriteLineAsync($"Finished scraping all URLs!");
-        Console.ReadLine();
+            var status = lastErrorMessage == string.Empty ? "Success" : "Failed";
+            scrapeLog.Append($"{status},{url},{DateTime.Now.ToString()},{lastErrorMessage}{Environment.NewLine}");
+        }
+        
+        await File.WriteAllTextAsync(outputPath + "\\scrapeLog.csv", scrapeLog.ToString());
     }
 
     static async Task<string?> ScrapeJsonStringFromUrlAsync(string url)
@@ -217,5 +246,6 @@ public class Program
         }
     }
 
-    public static string ToValidFileName(string fileName) => Path.GetInvalidFileNameChars().Aggregate(fileName, (f, c) => f.Replace(c, '_'));
+    public static string ToValidFileName(string fileName) =>
+        Path.GetInvalidFileNameChars().Aggregate(fileName, (f, c) => f.Replace(c, '_'));
 }

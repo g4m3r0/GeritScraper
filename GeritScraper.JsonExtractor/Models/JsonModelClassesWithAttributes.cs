@@ -163,7 +163,7 @@ public class Institution
     [JsonProperty("_einrichtungstypText")]
     public EinrichtungsTypText EinrichtungsTypText { get; set; }
     [JsonProperty("sumprofessuren")]
-    public int Sumprofessuren { get; set; }
+    public int? Sumprofessuren { get; set; }
     [JsonProperty("_sortNameDe")]
     public string Sortnamede { get; set; }
     [JsonProperty("crossreflink_1")]
@@ -171,7 +171,7 @@ public class Institution
     [JsonProperty("foerderatlas")]
     public string Foerderatlas { get; set; }
     [JsonProperty("_realeinrichtungstyp")]
-    public int Realeinrichtungstyp { get; set; }
+    public int? Realeinrichtungstyp { get; set; }
     [JsonProperty("promotion_links_html")]
     public List<string> PromotionLinksHtml { get; set; }
     [JsonProperty("logo")]
@@ -195,7 +195,7 @@ public class Institution
     [JsonProperty("ebene")]
     public object Ebene { get; set; }
     [JsonProperty("hauptfachgebiet")]
-    public int Hauptfachgebiet { get; set; }
+    public int? Hauptfachgebiet { get; set; }
     [JsonProperty("_fachausschuss")]
     public List<string> Fachausschuss { get; set; }
     [JsonProperty("_pklText")]
@@ -207,7 +207,7 @@ public class Institution
     [JsonProperty("_sortNameEn")]
     public string Sortnameen { get; set; }
     [JsonProperty("sumabteilungen")]
-    public object Sumabteilungen { get; set; } // TODO: Update with proper type
+    public int? Sumabteilungen { get; set; }
     [JsonProperty("name")]
     public Name Name { get; set; }
     [JsonProperty("_stabuPfad")]
@@ -217,11 +217,11 @@ public class Institution
     [JsonProperty("_fachgebiet")]
     public List<string> Fachgebiet { get; set; }
     [JsonProperty("sumstudierende")]
-    public int Sumstudierende { get; set; }
+    public int? Sumstudierende { get; set; }
     [JsonProperty("_lehrforschungsbereich")]
     public List<string> Lehrforschungsbereich { get; set; }
     [JsonProperty("_boostOffset")]
-    public int Boostoffset { get; set; }
+    public int? Boostoffset { get; set; }
     [JsonProperty("_insPfad")]
     public string Inspfad { get; set; }
     [JsonProperty("rorid")]
@@ -233,29 +233,29 @@ public class Institution
     [JsonProperty("_isRoot")]
     public bool IsRoot { get; set; }
     [JsonProperty("sumfachbereiche")]
-    public string? Sumfachbereiche { get; set; }
+    public int? Sumfachbereiche { get; set; }
     [JsonProperty("_fach")]
     public List<string>? Fach { get; set; } // TODO: Update with proper type
     [JsonProperty("_stabuText")]
     public StabuText StabuText2 { get; set; }
     [JsonProperty("bundesland")]
-    public int Bundesland { get; set; }
+    public int? Bundesland { get; set; }
     [JsonProperty("sumbereiche")]
-    public object Sumbereiche { get; set; }
+    public int? Sumbereiche { get; set; }
     [JsonProperty("sumfachgebiete")]
-    public int Sumfachgebiete { get; set; }
+    public int? Sumfachgebiete { get; set; }
     [JsonProperty("fotografprofillink")]
     public string Fotografprofillink { get; set; }
     [JsonProperty("wikipedia")]
     public Wikipedia Wikipedia { get; set; }
     [JsonProperty("hrk_link")]
-    public object HrkLink { get; set; }
+    public object HrkLink { get; set; } // TODO: Update with proper type
     [JsonProperty("gep_project_count")]
-    public int GepProjectCount { get; set; }
+    public int? GepProjectCount { get; set; }
     [JsonProperty("pklPfad")]
     public List<object> Pklpfad { get; set; } // TODO: Update with proper type
     [JsonProperty("suminstitutionen")]
-    public int Suminstitutionen { get; set; }
+    public int? Suminstitutionen { get; set; }
     [JsonProperty("einrichtungstypundsektion")]
     public string Einrichtungstypundsektion { get; set; }
     [JsonProperty("_type")]
@@ -267,23 +267,23 @@ public class Institution
     [JsonProperty("crossreflink_3")]
     public object Crossreflink3 { get; set; }
     [JsonProperty("ort")]
-    public int Ort { get; set; }
+    public int? Ort { get; set; }
     [JsonProperty("crossreflink_2")]
     public object Crossreflink2 { get; set; }
     [JsonProperty("_einrichtungstyp")]
-    public int Einrichtungstyp { get; set; }
+    public int? Einrichtungstyp { get; set; }
     [JsonProperty("kurzname")]
     public string Kurzname { get; set; }
     [JsonProperty("mitglied")]
     public bool Mitglied { get; set; }
     [JsonProperty("sumfakultaeten")]
-    public int Sumfakultaeten { get; set; }
+    public int? Sumfakultaeten { get; set; }
     [JsonProperty("lizenz")]
     public string Lizenz { get; set; }
     [JsonProperty("stabuPfad")]
     public List<string> Stabupfad2 { get; set; } // TODO: Update with proper type
     [JsonProperty("einrichtungsart")]
-    public object Einrichtungsart2 { get; set; }
+    public object Einrichtungsart2 { get; set; } // TODO: Update with proper type
     [JsonProperty("_fachgebietText")]
     public Fachgebiettext Fachgebiettext { get; set; }
     [JsonProperty("teaser")]
