@@ -1,6 +1,8 @@
-﻿namespace GeritScraper.Models;
+﻿using CsvHelper.Configuration.Attributes;
 
-using CsvHelper.Configuration.Attributes;
+namespace GeritScraper.DataModels;
+
+using CsvHelper;
 
 public class GeritCsvData
 {

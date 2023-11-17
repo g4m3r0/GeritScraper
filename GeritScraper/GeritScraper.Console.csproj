@@ -27,4 +27,8 @@
     </None>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\GeritScraper.DataModels\GeritScraper.DataModels.csproj" />
+  </ItemGroup>
+
 </Project>

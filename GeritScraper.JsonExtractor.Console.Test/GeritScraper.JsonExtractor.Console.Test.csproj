@@ -8,6 +8,8 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\GeritScraper.DataAdapter\GeritScraper.DataAdapter.csproj" />
+      <ProjectReference Include="..\GeritScraper.DataModels\GeritScraper.DataModels.csproj" />
       <ProjectReference Include="..\GeritScraper.JsonExtractor\GeritScraper.JsonExtractor.csproj" />
     </ItemGroup>
 

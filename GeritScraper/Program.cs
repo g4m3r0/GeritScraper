@@ -4,7 +4,7 @@ using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
 using CsvHelper;
-using GeritScraper.Models;
+using GeritScraper.DataModels;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -13,7 +13,7 @@ public class Program
     static async Task Main(string[] args)
     {
         //await ParseFilesForInstitutes();
-        
+
         // Scrapes the DFG GERiT institutes database file for the IDs of the institutions
         // Then scraping the DFG GERiT web catalog according to these IDs to extract the JSON object representation of these institutions
         await Console.Out.WriteLineAsync("Starting the Scraper");
@@ -84,7 +84,7 @@ public class Program
             var status = lastErrorMessage == string.Empty ? "Success" : "Failed";
             scrapeLog.Append($"{status},{url},{DateTime.Now.ToString()},{lastErrorMessage}{Environment.NewLine}");
         }
-        
+
         await File.WriteAllTextAsync(outputPath + "\\scrapeLog.csv", scrapeLog.ToString());
     }
 

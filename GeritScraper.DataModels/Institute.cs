@@ -1,4 +1,4 @@
-﻿namespace GeritScraper.Models;
+﻿namespace GeritScraper.DataModels;
 
 public class Institute
 {

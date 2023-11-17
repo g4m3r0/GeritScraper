@@ -6,14 +6,12 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
-
     <ItemGroup>
-      <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+      <PackageReference Include="MongoDB.Driver" Version="2.22.0" />
     </ItemGroup>
 
-
     <ItemGroup>
-      <Folder Include="Models\" />
+      <ProjectReference Include="..\GeritScraper.DataModels\GeritScraper.DataModels.csproj" />
     </ItemGroup>
 
 </Project>
