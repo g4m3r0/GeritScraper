@@ -4,6 +4,7 @@ using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
 using CsvHelper;
+using GeritScraper.Common;
 using GeritScraper.DataModels;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -12,8 +13,21 @@ public class Program
 {
     static async Task Main(string[] args)
     {
+        // var databasePath = Directory.GetCurrentDirectory() + "\\Input\\institutionen_gerit.csv";
+        // var outputPath = Directory.GetCurrentDirectory() + "\\Output_new2\\";
+        //
+        // var scraperService = new ScraperService();
+        // await scraperService.RunScraperAsync(databasePath, outputPath);
+        //
         //await ParseFilesForInstitutes();
 
+        var test = await ScraperService.ScrapeJsonStringFromUrlAsync("https://www.gerit.org/de/institutiondetail/15773");
+        
+        await ScrapeGerit();
+    }
+
+    static async Task ScrapeGerit()
+    {
         // Scrapes the DFG GERiT institutes database file for the IDs of the institutions
         // Then scraping the DFG GERiT web catalog according to these IDs to extract the JSON object representation of these institutions
         await Console.Out.WriteLineAsync("Starting the Scraper");
@@ -56,7 +70,7 @@ public class Program
 
             try
             {
-                jsonString = await ScrapeJsonStringFromUrlAsync(url);
+                jsonString = await ScraperService.ScrapeJsonStringFromUrlAsync(url);
             }
             catch (Exception e)
             {
@@ -65,7 +79,7 @@ public class Program
 
             if (!string.IsNullOrEmpty(jsonString))
             {
-                var universityName = ToValidFileName(GetInstitutionNameFromJson(jsonString));
+                var universityName = Utilities.ToValidFileName(Utilities.GetInstitutionNameFromJson(jsonString));
                 await Console.Out.WriteLineAsync($"Success - Scraped {universityName} on {url}.");
 
                 if (!Directory.Exists(outputPath + universityName))
@@ -86,43 +100,6 @@ public class Program
         }
 
         await File.WriteAllTextAsync(outputPath + "\\scrapeLog.csv", scrapeLog.ToString());
-    }
-
-    static async Task<string?> ScrapeJsonStringFromUrlAsync(string url)
-    {
-        using var httpClient = new HttpClient();
-        var html = await httpClient.GetStringAsync(url);
-
-        var scriptPattern = @"<script>\s*window\.__PRELOADED_STATE__\s*=(.*?)<\/script>";
-        var regex = new Regex(scriptPattern, RegexOptions.Singleline);
-        var match = regex.Match(html);
-
-        if (match.Success)
-        {
-            // Get the whole json which also includes lots of meta data
-            var jsonString = match.Groups[1].Value;
-            //return jsonString;
-
-            // Validate and format the JSON string
-            var jsonObj = JObject.Parse(jsonString);
-
-            // Extract the 'institutionDetail' key and its child elements (containing all information about the institution)
-            var institutionDetail = jsonObj["institutionDetail"];
-            return institutionDetail.ToString();
-        }
-
-        return null;
-    }
-
-    static string GetInstitutionNameFromJson(string jsonString)
-    {
-        // TODO handle excetions / null reference errors
-
-        var jsonObj = JObject.Parse(jsonString);
-        var institution = jsonObj["institution"];
-        var fullName = institution["_fullName"]["de"]; // we could also use the english name using ["en"]
-
-        return fullName.ToString();
     }
 
     static List<string> LoadUrlsFromCsv(string csvFilePath)
@@ -246,6 +223,5 @@ public class Program
         }
     }
 
-    public static string ToValidFileName(string fileName) =>
-        Path.GetInvalidFileNameChars().Aggregate(fileName, (f, c) => f.Replace(c, '_'));
+
 }

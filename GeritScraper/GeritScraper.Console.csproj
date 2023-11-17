@@ -28,6 +28,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\GeritScraper.Common\GeritScraper.Common.csproj" />
     <ProjectReference Include="..\GeritScraper.DataModels\GeritScraper.DataModels.csproj" />
   </ItemGroup>
 

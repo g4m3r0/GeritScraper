@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using GeritScraper.Common;
 using GeritScraper.DataAdapter;
 using GeritScraper.DataModels;
 using Newtonsoft.Json;
@@ -23,9 +24,14 @@ public class Program
         {
             try
             {
-                var institute = DeserializeSingleInstitute(path);
+                var institute = DeserializeSingleInstituteFromFile(path);
+                var url = $"https://www.gerit.org/de/institutiondetail/{institute.Id}";
+                await Console.Out.WriteLineAsync($"Found {institute.Name.De}, ID: {institute.Id}, Url: {url}"); // TODO log to file
+                
                 allInstitutes.Add(institute);
-                await Console.Out.WriteLineAsync($"Deserializes {institute.Name.De}");
+                
+                await LoopTreeChildren(institute.Tree.Children);
+                
                 await mongoDbAdapter.SaveOrUpdateInstitutionAsync(institute);
             }
             catch (Exception e)
@@ -40,7 +46,58 @@ public class Program
         Console.WriteLine("Ended");
     }
 
-    static Institution DeserializeSingleInstitute(string jsonFilePath)
+    static async Task LoopTreeChildren(List<ChildrenItem> children)
+    {
+        if (children == null || !children.Any())
+            return;
+
+        foreach (var child in children)
+        {
+            // Process the child item
+            await ProcessChild(child);
+
+            // Recursively loop through the child's children
+            LoopTreeChildren(child.Children);
+        }
+    }
+    
+    private static async Task ProcessChild(ChildrenItem child)
+    {
+        var url = $"https://www.gerit.org/de/institutiondetail/{child.Id}";
+        Console.WriteLine($"    Found Child {child.Name.De}, ID: {child.Id}, Url: {url}"); // TODO log to file
+
+        try
+        {
+            // Get Json and parse it into a C# object
+            var jsonString = await ScraperService.ScrapeJsonStringFromUrlAsync(url);
+            var institutionDetails = DeserializeSingleInstitute(jsonString);
+
+            // Clear Tree to reduce duplicate data
+            institutionDetails.Tree = null;
+            
+            child.InstitutionDetails = institutionDetails;
+        }
+        catch (Exception e)
+        {
+            // TODO log to file
+            Console.WriteLine(e.Message);
+        }
+    }
+
+    static Institution DeserializeSingleInstituteFromFile(string jsonFilePath)
+    {
+        if (!File.Exists(jsonFilePath))
+        {
+            throw new FileNotFoundException();
+        }
+        
+        // Read the content of the file
+        string jsonContent = File.ReadAllText(jsonFilePath, Encoding.UTF8);
+
+        return DeserializeSingleInstitute(jsonContent);
+    }
+    
+    static Institution DeserializeSingleInstitute(string jsonContent)
     {
         // JSON Serialization Settings
         var jsonSettings = new JsonSerializerSettings
@@ -55,9 +112,6 @@ public class Program
             },
             // Add other settings if needed, such as handling nulls or default values
         };
-        
-        // Read the content of the file
-        string jsonContent = File.ReadAllText(jsonFilePath, Encoding.UTF8);
 
         // Deserialize the JSON content to the RootObject class
         // Replace 'RootObject' with the actual name of your root class

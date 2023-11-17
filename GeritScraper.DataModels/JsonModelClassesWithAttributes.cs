@@ -171,6 +171,8 @@ public class ChildrenItem
     [JsonProperty("name")]
     public Name Name { get; set; }
     
+    public Institution? InstitutionDetails { get; set; }
+    
     [JsonProperty("children")]
     public List<ChildrenItem> Children { get; set; }
 }
@@ -183,15 +185,8 @@ public class Tree
     [JsonProperty("name")]
     public Name Name { get; set; }
     
-    public InstitutionDetails? InstitutionDetails { get; set; }
-    
     [JsonProperty("children")]
     public List<ChildrenItem> Children { get; set; }
-}
-
-public class InstitutionDetails
-{
-    
 }
 
 public class Institution
@@ -402,7 +397,7 @@ public class Institution
     public Geolocation Geolocation { get; set; }
     
     [JsonProperty("tree")]
-    public Tree Tree { get; set; }
+    public Tree? Tree { get; set; }
 }
 
 public class Scrollpositiondetail
