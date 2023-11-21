@@ -2,9 +2,9 @@
 
 namespace GeritScraper.DataAdapter;
 
-public interface IMongoDataAdapter
+public interface IMongoInstitutionDataAdapter
 {
     Task SaveInstitutionsAsync(IEnumerable<Institution> institutions);
     Task SaveOrUpdateInstitutionAsync(Institution institution);
-    Task<List<Institution>> GetFullJobsAsync();
+    Task<List<Institution>> GetFullInstitutionsAsync();
 }

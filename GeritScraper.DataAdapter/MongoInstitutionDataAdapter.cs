@@ -3,11 +3,11 @@ using MongoDB.Driver;
 
 namespace GeritScraper.DataAdapter;
 
-public class MongoDataAdapter : IMongoDataAdapter
+public class MongoInstitutionDataAdapter : IMongoInstitutionDataAdapter
 {
     private readonly IMongoCollection<Institution> _institutionCollection;
 
-    public MongoDataAdapter(string connectionString, string databaseName, string collectionName)
+    public MongoInstitutionDataAdapter(string connectionString, string databaseName, string collectionName)
     {
         var settings = MongoClientSettings.FromConnectionString(connectionString);
             
@@ -32,7 +32,7 @@ public class MongoDataAdapter : IMongoDataAdapter
         await _institutionCollection.ReplaceOneAsync(filter, institution, new ReplaceOptions { IsUpsert = true });
     }
     
-    public async Task<List<Institution>> GetFullJobsAsync()
+    public async Task<List<Institution>> GetFullInstitutionsAsync()
     {
         return await _institutionCollection.Find(i => true).ToListAsync();
     }

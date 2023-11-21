@@ -10,7 +10,7 @@ public class Program
 {
     static async Task Main(string[] args)
     {
-        var mongoDbAdapter = new MongoDataAdapter("mongodb+srv://AdminLu:&%406TmNYccF4k24iJ6kCh@academicjobs.lgwya1x.mongodb.net/?retryWrites=true&w=majority", "Institutions", "institutionCollection");
+        var mongoDbAdapter = new MongoInstitutionDataAdapter("mongodb+srv://AdminLu:&%406TmNYccF4k24iJ6kCh@academicjobs.lgwya1x.mongodb.net/?retryWrites=true&w=majority", "Institutions", "institutionCollection");
 
         
         string inputPath = "C:\\Users\\g4m3r\\source\\repos\\GeritScraper\\GeritScraper\\bin\\Debug\\net6.0\\Output_new";
@@ -41,7 +41,7 @@ public class Program
             }
         }
 
-        var allInstitutesInDb = await mongoDbAdapter.GetFullJobsAsync();
+        var allInstitutesInDb = await mongoDbAdapter.GetFullInstitutionsAsync();
         Console.WriteLine($"{allInstitutesInDb.Count} Institutions in DB.");
         Console.WriteLine("Ended");
     }
