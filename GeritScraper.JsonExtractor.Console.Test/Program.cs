@@ -2,6 +2,7 @@
 using GeritScraper.Common;
 using GeritScraper.DataAdapter;
 using GeritScraper.DataModels;
+using GeritScraper.JsonExtractor.Console.Test;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
@@ -10,13 +11,37 @@ public class Program
 {
     static async Task Main(string[] args)
     {
-        var mongoDbAdapter = new MongoInstitutionDataAdapter("mongodb+srv://AdminLu:&%406TmNYccF4k24iJ6kCh@academicjobs.lgwya1x.mongodb.net/?retryWrites=true&w=majority", "Institutions", "institutionCollection");
+        var mongoDbAdapter = new MongoInstitutionDataAdapter(
+            "mongodb+srv://AdminLu:&%406TmNYccF4k24iJ6kCh@academicjobs.lgwya1x.mongodb.net/?retryWrites=true&w=majority",
+            "Institutions", "institutionCollection");
 
-        
-        string inputPath = "C:\\Users\\g4m3r\\source\\repos\\GeritScraper\\GeritScraper\\bin\\Debug\\net6.0\\Output_new";
-        
+        // TEST CODE
+        try
+        {
+            Console.WriteLine("Start getting job listings from database.");
+            var allInts = await mongoDbAdapter.GetFullInstitutionsAsync();
+            Console.WriteLine($"Done. Database contains {allInts.Count} job listings.");
+
+            string searchUrl = "https://vsr.informatik.tu-chemnitz.de/about/people/gaedke/";
+
+            var bestMatch = await FindMatch.FindBestUrlMatchAcrossInstitution(allInts, searchUrl);
+            Console.WriteLine(bestMatch != null ? bestMatch.InstitutionDetails.Url : "No match found");
+
+            Console.ReadLine();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            Console.ReadLine();
+        }
+        // END TEST CODE
+
+
+        string inputPath =
+            "C:\\Users\\g4m3r\\source\\repos\\GeritScraper\\GeritScraper\\bin\\Debug\\net6.0\\Output_new";
+
         // Get all Json Files (one file represents one institution)
-        string [] filePaths = Directory.GetFiles(inputPath, "*.json", SearchOption.AllDirectories);
+        string[] filePaths = Directory.GetFiles(inputPath, "*.json", SearchOption.AllDirectories);
 
         var allInstitutes = new List<Institution>();
 
@@ -26,12 +51,13 @@ public class Program
             {
                 var institute = DeserializeSingleInstituteFromFile(path);
                 var url = $"https://www.gerit.org/de/institutiondetail/{institute.Id}";
-                await Console.Out.WriteLineAsync($"Found {institute.Name.De}, ID: {institute.Id}, Url: {url}"); // TODO log to file
-                
+                await Console.Out.WriteLineAsync(
+                    $"Found {institute.Name.De}, ID: {institute.Id}, Url: {url}"); // TODO log to file
+
                 allInstitutes.Add(institute);
-                
+
                 await LoopTreeChildren(institute.Tree.Children);
-                
+
                 await mongoDbAdapter.SaveOrUpdateInstitutionAsync(institute);
             }
             catch (Exception e)
@@ -60,7 +86,7 @@ public class Program
             LoopTreeChildren(child.Children);
         }
     }
-    
+
     private static async Task ProcessChild(ChildrenItem child)
     {
         var url = $"https://www.gerit.org/de/institutiondetail/{child.Id}";
@@ -74,7 +100,7 @@ public class Program
 
             // Clear Tree to reduce duplicate data
             institutionDetails.Tree = null;
-            
+
             child.InstitutionDetails = institutionDetails;
         }
         catch (Exception e)
@@ -90,13 +116,13 @@ public class Program
         {
             throw new FileNotFoundException();
         }
-        
+
         // Read the content of the file
         string jsonContent = File.ReadAllText(jsonFilePath, Encoding.UTF8);
 
         return DeserializeSingleInstitute(jsonContent);
     }
-    
+
     static Institution DeserializeSingleInstitute(string jsonContent)
     {
         // JSON Serialization Settings

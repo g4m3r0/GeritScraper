@@ -11,6 +11,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\..\ProfJobs\ProfJobs.NLP.Common\ProfJobs.NLP.Common.csproj" />
       <ProjectReference Include="..\GeritScraper.DataModels\GeritScraper.DataModels.csproj" />
     </ItemGroup>
 

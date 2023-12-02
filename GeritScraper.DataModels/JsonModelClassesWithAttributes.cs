@@ -118,7 +118,7 @@ public class Anschrift
     public Telefon Telefon { get; set; }
     
     [JsonProperty("bundesland")]
-    public string Bundesland { get; set; }
+    public string? Bundesland { get; set; }
     
     [JsonProperty("postfach")]
     public object Postfach { get; set; }
@@ -187,6 +187,8 @@ public class Tree
     
     [JsonProperty("children")]
     public List<ChildrenItem> Children { get; set; }
+
+    public bool IsExpanded { get; set; } = false;
 }
 
 public class Institution
