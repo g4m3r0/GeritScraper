@@ -6,7 +6,7 @@ using ClosedXML.Excel;
 using CsvHelper;
 using GeritScraper.Common;
 using GeritScraper.DataModels;
-using GeritScraper.JsonExtractor.Console.Test;
+using GeritScraper.JsonExtractor;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -169,20 +169,25 @@ public class Program
         var outputPath = Directory.GetCurrentDirectory() + "\\Output\\";
 
         foreach (var dir in Directory.GetDirectories(outputPath))
-        foreach (var file in Directory.GetFiles(dir))
         {
-            if (file.Contains("institutes.json")) continue;
+            foreach (var file in Directory.GetFiles(dir))
+            {
+                if (file.Contains("institutes.json"))
+                {
+                    continue;
+                }
 
-            var jsonString = File.ReadAllText(file);
-            var institutes = GetAllInstitutesFromJson(jsonString);
+                var jsonString = File.ReadAllText(file);
+                var institutes = GetAllInstitutesFromJson(jsonString);
 
-            var institutesWithUrls = await ScrapeInstitutesForUrl(institutes);
+                var institutesWithUrls = await ScrapeInstitutesForUrl(institutes);
 
-            // Serialize the model to JSON
-            var institutesJson = JsonConvert.SerializeObject(institutesWithUrls, Formatting.Indented);
+                // Serialize the model to JSON
+                var institutesJson = JsonConvert.SerializeObject(institutesWithUrls, Formatting.Indented);
 
-            // Save the JSON to a file
-            File.WriteAllText(dir + "\\institutes.json", institutesJson);
+                // Save the JSON to a file
+                File.WriteAllText(dir + "\\institutes.json", institutesJson);
+            }
         }
     }
 

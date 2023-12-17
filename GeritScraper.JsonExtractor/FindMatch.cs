@@ -1,6 +1,6 @@
 ﻿using GeritScraper.DataModels;
 
-namespace GeritScraper.JsonExtractor.Console.Test;
+namespace GeritScraper.JsonExtractor;
 
 public class FindMatch
 {

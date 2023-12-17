@@ -6,7 +6,7 @@ using GeritScraper.DataModels;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 
-namespace GeritScraper.JsonExtractor.Console.Test;
+namespace GeritScraper.JsonExtractor;
 
 public class JsonExtractor
 {
@@ -18,7 +18,7 @@ public class JsonExtractor
     private static readonly string _productVersion = "1.0";
     private static readonly string _contactInformation = "Contact: lucas.schmutzler@s2018.tu-chemnitz.de";
 
-    private static ScraperService _scraperService;
+    private static ScraperService? _scraperService;
 
     public async Task RunExtractor(string inputPath)
     {
@@ -29,7 +29,8 @@ public class JsonExtractor
 
         var allInstitutes = new List<Institution>();
 
-        foreach (var path in filePaths) // TODO log to file
+        foreach (var path in filePaths)
+        {
             var institute = DeserializeSingleInstituteFromFile(path);
             var url = $"https://www.gerit.org/de/institutiondetail/{institute.Id}";
             Debug.WriteLine(
@@ -40,6 +41,7 @@ public class JsonExtractor
             await LoopTreeChildren(institute.Tree.Children);
 
             await mongoDbAdapter.SaveOrUpdateInstitutionAsync(institute);
+        }
 
         var allInstitutesInDb = await mongoDbAdapter.GetFullInstitutionsAsync();
         Debug.WriteLine($"{allInstitutesInDb.Count} Institutions in DB.");

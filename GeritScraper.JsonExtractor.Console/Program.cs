@@ -1,4 +1,4 @@
-﻿using GeritScraper.JsonExtractor.Console.Test;
+﻿using GeritScraper.JsonExtractor;
 
 public class Program
 {

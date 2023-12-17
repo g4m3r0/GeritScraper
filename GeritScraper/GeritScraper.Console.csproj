@@ -18,15 +18,9 @@
     </ItemGroup>
 
     <ItemGroup>
-        <None Update="Input\institutionen_gerit.csv">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
-    </ItemGroup>
-
-    <ItemGroup>
         <ProjectReference Include="..\GeritScraper.Common\GeritScraper.Common.csproj"/>
         <ProjectReference Include="..\GeritScraper.DataModels\GeritScraper.DataModels.csproj"/>
-        <ProjectReference Include="..\GeritScraper.JsonExtractor.Console\GeritScraper.JsonExtractor.Console.csproj"/>
+        <ProjectReference Include="..\GeritScraper.JsonExtractor\GeritScraper.JsonExtractor.csproj" />
     </ItemGroup>
 
 </Project>
