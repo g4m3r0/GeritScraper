@@ -1,32 +1,32 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <OutputType>Exe</OutputType>
-    <TargetFramework>net6.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-  </PropertyGroup>
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>net6.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="ClosedXML" Version="0.102.1" />
-    <PackageReference Include="CsvHelper" Version="30.0.1" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-    <PackageReference Include="StyleCop.Analyzers.Unstable" Version="1.2.0.435">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-  </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="ClosedXML" Version="0.102.1"/>
+        <PackageReference Include="CsvHelper" Version="30.0.1"/>
+        <PackageReference Include="Newtonsoft.Json" Version="13.0.3"/>
+        <PackageReference Include="StyleCop.Analyzers.Unstable" Version="1.2.0.435">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+    </ItemGroup>
 
-  <ItemGroup>
-    <None Update="Input\institutionen_gerit.csv">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
+    <ItemGroup>
+        <None Update="Input\institutionen_gerit.csv">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+    </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\GeritScraper.Common\GeritScraper.Common.csproj" />
-    <ProjectReference Include="..\GeritScraper.DataModels\GeritScraper.DataModels.csproj" />
-    <ProjectReference Include="..\GeritScraper.JsonExtractor.Console\GeritScraper.JsonExtractor.Console.csproj" />
-  </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\GeritScraper.Common\GeritScraper.Common.csproj"/>
+        <ProjectReference Include="..\GeritScraper.DataModels\GeritScraper.DataModels.csproj"/>
+        <ProjectReference Include="..\GeritScraper.JsonExtractor.Console\GeritScraper.JsonExtractor.Console.csproj"/>
+    </ItemGroup>
 
 </Project>

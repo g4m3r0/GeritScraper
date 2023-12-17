@@ -1,5 +1,4 @@
-﻿using GeritScraper.DataModels;
-using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json.Linq;
 
 namespace GeritScraper.Common;
 
@@ -13,7 +12,9 @@ public class Utilities
 
         return fullName.ToString();
     }
-    
-    public static string ToValidFileName(string fileName) =>
-        Path.GetInvalidFileNameChars().Aggregate(fileName, (f, c) => f.Replace(c, '_'));
+
+    public static string ToValidFileName(string fileName)
+    {
+        return Path.GetInvalidFileNameChars().Aggregate(fileName, (f, c) => f.Replace(c, '_'));
+    }
 }

@@ -7,12 +7,12 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="MongoDB.Driver" Version="2.22.0" />
+        <PackageReference Include="MongoDB.Driver" Version="2.22.0"/>
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\ProfJobs\ProfJobs.NLP.Common\ProfJobs.NLP.Common.csproj" />
-      <ProjectReference Include="..\GeritScraper.DataModels\GeritScraper.DataModels.csproj" />
+        <ProjectReference Include="..\..\ProfJobs\ProfJobs.NLP.Common\ProfJobs.NLP.Common.csproj"/>
+        <ProjectReference Include="..\GeritScraper.DataModels\GeritScraper.DataModels.csproj"/>
     </ItemGroup>
 
 </Project>

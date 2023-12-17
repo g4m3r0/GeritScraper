@@ -1,6 +1,4 @@
-﻿using System;
-using System.Globalization;
-using System.IO;
+﻿using System.Globalization;
 using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -16,18 +14,18 @@ public class Program
 {
     private const string DfgGeritExcelLink = "https://gerit.org/downloads/institutionen_gerit.xlsx";
 
-    private static WebClient _wClient = new WebClient();
+    private static readonly WebClient _wClient = new();
 
     private static string _databasePath = string.Empty;
     private static string _outputPath = string.Empty;
 
-    private static int _delayInMs = 0;
-    private static string _productVersion = "1.0";
-    private static string _contactInformation = "Contact: lucas.schmutzler@s2018.tu-chemnitz.de";
+    private static readonly int _delayInMs = 0;
+    private static readonly string _productVersion = "1.0";
+    private static readonly string _contactInformation = "Contact: lucas.schmutzler@s2018.tu-chemnitz.de";
 
     private static ScraperService _scraperService;
 
-    static async Task Main(string[] args)
+    private static async Task Main(string[] args)
     {
         // Setup initial value
         _scraperService = new ScraperService(_contactInformation, _productVersion, _delayInMs);
@@ -45,7 +43,7 @@ public class Program
         await Console.Out.WriteLineAsync("Finished JsonExtractor");
     }
 
-    static async Task ScrapeGerit()
+    private static async Task ScrapeGerit()
     {
         // Scrapes the DFG GERiT institutes database file for the IDs of the institutions
         // Then scraping the DFG GERiT web catalog according to these IDs to extract the JSON object representation of these institutions
@@ -60,7 +58,7 @@ public class Program
             var institutionUrls = await ParseGeritDatabaseForUrls(_databasePath);
             await ScrapeUrlsAsync(institutionUrls, _outputPath);
 
-            await Console.Out.WriteLineAsync($"Finished scraping all URLs!");
+            await Console.Out.WriteLineAsync("Finished scraping all URLs!");
         }
         catch (Exception e)
         {
@@ -69,7 +67,7 @@ public class Program
         }
     }
 
-    static async Task<List<string>> ParseGeritDatabaseForUrls(string databasePath)
+    private static async Task<List<string>> ParseGeritDatabaseForUrls(string databasePath)
     {
         await Console.Out.WriteLineAsync("Loading URLs from CSV datasource.");
         var urls = LoadUrlsFromExcel(databasePath);
@@ -79,12 +77,9 @@ public class Program
         return urls;
     }
 
-    static async Task ScrapeUrlsAsync(List<string> Urls, string outputPath)
+    private static async Task ScrapeUrlsAsync(List<string> Urls, string outputPath)
     {
-        if (!Directory.Exists(outputPath))
-        {
-            Directory.CreateDirectory(outputPath);
-        }
+        if (!Directory.Exists(outputPath)) Directory.CreateDirectory(outputPath);
 
         StringBuilder scrapeLog = new();
 
@@ -110,9 +105,7 @@ public class Program
                 await Console.Out.WriteLineAsync($"Success - Scraped {universityName} on {url}.");
 
                 if (!Directory.Exists(outputPath + universityName))
-                {
                     Directory.CreateDirectory(outputPath + universityName);
-                }
 
                 var outputFileName = outputPath + universityName + "\\" + url.Split('/').Last() + ".json";
                 await File.WriteAllTextAsync(outputFileName, jsonString);
@@ -129,7 +122,7 @@ public class Program
         await File.WriteAllTextAsync(outputPath + "\\scrapeLog.csv", scrapeLog.ToString());
     }
 
-    static List<string> LoadUrlsFromCsv(string csvFilePath)
+    private static List<string> LoadUrlsFromCsv(string csvFilePath)
     {
         using var reader = new StreamReader(csvFilePath);
         using var csv = new CsvReader(reader, CultureInfo.InvariantCulture);
@@ -144,10 +137,7 @@ public class Program
         }
 
         var urls = new List<string>();
-        foreach (var record in records)
-        {
-            urls.Add(record.UrlGeritNachweis);
-        }
+        foreach (var record in records) urls.Add(record.UrlGeritNachweis);
 
         return urls;
     }
@@ -167,10 +157,7 @@ public class Program
             {
                 // Assume URLs are in the first column
                 var geritId = row.Cell(1).GetValue<string>();
-                if (!string.IsNullOrEmpty(geritId))
-                {
-                    urls.Add($"https://www.gerit.org/en/institutiondetail/{geritId}");
-                }
+                if (!string.IsNullOrEmpty(geritId)) urls.Add($"https://www.gerit.org/en/institutiondetail/{geritId}");
             }
         }
 
@@ -182,25 +169,20 @@ public class Program
         var outputPath = Directory.GetCurrentDirectory() + "\\Output\\";
 
         foreach (var dir in Directory.GetDirectories(outputPath))
+        foreach (var file in Directory.GetFiles(dir))
         {
-            foreach (var file in Directory.GetFiles(dir))
-            {
-                if (file.Contains("institutes.json"))
-                {
-                    continue;
-                }
+            if (file.Contains("institutes.json")) continue;
 
-                var jsonString = File.ReadAllText(file);
-                var institutes = GetAllInstitutesFromJson(jsonString);
+            var jsonString = File.ReadAllText(file);
+            var institutes = GetAllInstitutesFromJson(jsonString);
 
-                var institutesWithUrls = await ScrapeInstitutesForUrl(institutes);
+            var institutesWithUrls = await ScrapeInstitutesForUrl(institutes);
 
-                // Serialize the model to JSON
-                var institutesJson = JsonConvert.SerializeObject(institutesWithUrls, Formatting.Indented);
+            // Serialize the model to JSON
+            var institutesJson = JsonConvert.SerializeObject(institutesWithUrls, Formatting.Indented);
 
-                // Save the JSON to a file
-                File.WriteAllText(dir + "\\institutes.json", institutesJson);
-            }
+            // Save the JSON to a file
+            File.WriteAllText(dir + "\\institutes.json", institutesJson);
         }
     }
 
@@ -208,7 +190,7 @@ public class Program
     {
         using var httpClient = new HttpClient();
 
-        foreach (Institute instute in institutes)
+        foreach (var instute in institutes)
         {
             string htmlString;
 
@@ -262,16 +244,12 @@ public class Program
             var id = (int)token["id"];
             var name = token["name"]["de"].ToString();
 
-            institutes.Add(new Institute() { Id = id, Name = name });
+            institutes.Add(new Institute { Id = id, Name = name });
         }
 
         // Recursively parse all children
         if (token["children"] != null)
-        {
             foreach (var child in token["children"])
-            {
                 ExtractIds(child, institutes);
-            }
-        }
     }
 }

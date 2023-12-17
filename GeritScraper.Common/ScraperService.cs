@@ -1,21 +1,18 @@
-﻿using System.Globalization;
-using System.Net.Http.Headers;
+﻿using System.Net.Http.Headers;
 using System.Text.RegularExpressions;
-using CsvHelper;
-using GeritScraper.DataModels;
 using Newtonsoft.Json.Linq;
 
 namespace GeritScraper.Common;
 
 public class ScraperService
 {
-    private readonly HttpClient _httpClient = new HttpClient();
     private readonly int _delayInMs = 1000;
+    private readonly HttpClient _httpClient = new();
 
     public ScraperService(string contactInfo, string productVersion = "1.0", int delayInMs = 1000)
     {
         _delayInMs = delayInMs;
-        
+
         _httpClient.DefaultRequestHeaders.UserAgent.Clear();
         _httpClient.DefaultRequestHeaders.UserAgent.Add(new ProductInfoHeaderValue("ProfJobs",
             productVersion));
@@ -40,10 +37,10 @@ public class ScraperService
 
             // Extract the 'institutionDetail' key and its child elements (containing all information about the institution)
             var institutionDetail = jsonObj["institutionDetail"];
-            
+
             // Delay between next scrape
             await Task.Delay(_delayInMs);
-            
+
             return institutionDetail.ToString();
         }
 

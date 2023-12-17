@@ -8,6 +8,5 @@ public class Institute
 
     public string Url { get; set; } = string.Empty;
 
-    public string GeritUrl => $"https://www.gerit.org/de/institutiondetail/{this.Id}";
-
+    public string GeritUrl => $"https://www.gerit.org/de/institutiondetail/{Id}";
 }

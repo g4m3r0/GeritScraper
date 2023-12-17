@@ -10,51 +10,42 @@ namespace GeritScraper.JsonExtractor.Console.Test;
 
 public class JsonExtractor
 {
-    private static MongoInstitutionDataAdapter mongoDbAdapter  = new MongoInstitutionDataAdapter(
+    private static readonly MongoInstitutionDataAdapter mongoDbAdapter = new(
         "mongodb+srv://AdminLu:&%406TmNYccF4k24iJ6kCh@academicjobs.lgwya1x.mongodb.net/?retryWrites=true&w=majority",
         "Institutions", "institutionCollection");
-    
+
     private static readonly int _delayInMs = 0;
     private static readonly string _productVersion = "1.0";
     private static readonly string _contactInformation = "Contact: lucas.schmutzler@s2018.tu-chemnitz.de";
 
     private static ScraperService _scraperService;
+
     public async Task RunExtractor(string inputPath)
     {
         _scraperService = new ScraperService(_contactInformation, _productVersion, _delayInMs);
-        
+
         // Get all Json Files (one file represents one institution)
-        string[] filePaths = Directory.GetFiles(inputPath, "*.json", SearchOption.AllDirectories);
+        var filePaths = Directory.GetFiles(inputPath, "*.json", SearchOption.AllDirectories);
 
         var allInstitutes = new List<Institution>();
 
-        foreach (var path in filePaths)
-        {
-            try
-            {
-                var institute = DeserializeSingleInstituteFromFile(path);
-                var url = $"https://www.gerit.org/de/institutiondetail/{institute.Id}";
-                Debug.WriteLine(
-                    $"Found {institute.Name.De}, ID: {institute.Id}, Url: {url}"); // TODO log to file
+        foreach (var path in filePaths) // TODO log to file
+            var institute = DeserializeSingleInstituteFromFile(path);
+            var url = $"https://www.gerit.org/de/institutiondetail/{institute.Id}";
+            Debug.WriteLine(
+                $"Found {institute.Name.De}, ID: {institute.Id}, Url: {url}");
 
-                allInstitutes.Add(institute);
+            allInstitutes.Add(institute);
 
-                await LoopTreeChildren(institute.Tree.Children);
+            await LoopTreeChildren(institute.Tree.Children);
 
-                await mongoDbAdapter.SaveOrUpdateInstitutionAsync(institute);
-            }
-            catch (Exception e)
-            {
-                throw;
-                // Ignore for now
-            }
-        }
+            await mongoDbAdapter.SaveOrUpdateInstitutionAsync(institute);
 
         var allInstitutesInDb = await mongoDbAdapter.GetFullInstitutionsAsync();
         Debug.WriteLine($"{allInstitutesInDb.Count} Institutions in DB.");
         Debug.WriteLine("Ended");
     }
-    
+
     private static async Task LoopTreeChildren(List<ChildrenItem> children)
     {
         if (children == null || !children.Any())
@@ -94,13 +85,10 @@ public class JsonExtractor
 
     private static Institution DeserializeSingleInstituteFromFile(string jsonFilePath)
     {
-        if (!File.Exists(jsonFilePath))
-        {
-            throw new FileNotFoundException();
-        }
+        if (!File.Exists(jsonFilePath)) throw new FileNotFoundException();
 
         // Read the content of the file
-        string jsonContent = File.ReadAllText(jsonFilePath, Encoding.UTF8);
+        var jsonContent = File.ReadAllText(jsonFilePath, Encoding.UTF8);
 
         return DeserializeSingleInstitute(jsonContent);
     }
@@ -117,7 +105,7 @@ public class JsonExtractor
                     ProcessDictionaryKeys = true,
                     OverrideSpecifiedNames = false
                 }
-            },
+            }
             // Add other settings if needed, such as handling nulls or default values
         };
 

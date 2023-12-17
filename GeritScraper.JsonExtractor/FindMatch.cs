@@ -12,22 +12,23 @@ public class FindMatch
 
         return state.BestMatch;
     }
-    
-    public static async Task<ChildrenItem> FindBestUrlMatchAcrossInstitution(List<Institution> institutions, string searchUrl)
+
+    public static async Task<ChildrenItem> FindBestUrlMatchAcrossInstitution(List<Institution> institutions,
+        string searchUrl)
     {
         var state = new MatchState();
 
         foreach (var institute in institutions)
         {
             if (institute.Tree is null) continue;
-            
+
             await LoopTreeChildren(institute.Tree.Children, searchUrl, state);
         }
 
         return state.BestMatch;
     }
 
-    static async Task LoopTreeChildren(List<ChildrenItem> children, string searchUrl, MatchState state)
+    private static async Task LoopTreeChildren(List<ChildrenItem> children, string searchUrl, MatchState state)
     {
         if (children == null || !children.Any())
             return;
@@ -35,9 +36,9 @@ public class FindMatch
         foreach (var child in children)
         {
             if (child.InstitutionDetails is null) continue;
-            
-            int matchLength = GetMatchLength(child.InstitutionDetails.Url, searchUrl);
-            
+
+            var matchLength = GetMatchLength(child.InstitutionDetails.Url, searchUrl);
+
             if (matchLength > state.MaxMatchLength)
             {
                 state.MaxMatchLength = matchLength;
@@ -52,21 +53,15 @@ public class FindMatch
     {
         if (string.IsNullOrEmpty(url1) || string.IsNullOrEmpty(url2))
             return 0;
-        
-        int matchLength = 0;
-        int minLength = Math.Min(url1.Length, url2.Length);
-        
-        for (int i = 0; i < minLength; i++)
-        {
+
+        var matchLength = 0;
+        var minLength = Math.Min(url1.Length, url2.Length);
+
+        for (var i = 0; i < minLength; i++)
             if (url1[i] == url2[i])
-            {
                 matchLength++;
-            }
             else
-            {
                 break;
-            }
-        }
         return matchLength;
     }
 }
@@ -74,5 +69,5 @@ public class FindMatch
 public class MatchState
 {
     public ChildrenItem? BestMatch { get; set; }
-    public int MaxMatchLength { get; set; } = 0;
+    public int MaxMatchLength { get; set; }
 }
