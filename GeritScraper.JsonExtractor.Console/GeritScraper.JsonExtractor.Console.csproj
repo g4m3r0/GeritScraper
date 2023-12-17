@@ -5,12 +5,14 @@
         <TargetFramework>net6.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
+        <RootNamespace>GeritScraper.JsonExtractor.Console.Test</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\GeritScraper.Common\GeritScraper.Common.csproj" />
       <ProjectReference Include="..\GeritScraper.DataAdapter\GeritScraper.DataAdapter.csproj" />
       <ProjectReference Include="..\GeritScraper.DataModels\GeritScraper.DataModels.csproj" />
+      <ProjectReference Include="..\GeritScraper.JsonExtractor\GeritScraper.JsonExtractor.csproj" />
     </ItemGroup>
 
 </Project>

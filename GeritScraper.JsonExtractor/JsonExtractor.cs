@@ -1,45 +1,28 @@
-﻿using System.Text;
+﻿using System.Diagnostics;
+using System.Text;
 using GeritScraper.Common;
 using GeritScraper.DataAdapter;
 using GeritScraper.DataModels;
-using GeritScraper.JsonExtractor.Console.Test;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
 
-public class Program
+namespace GeritScraper.JsonExtractor.Console.Test;
+
+public class JsonExtractor
 {
-    static async Task Main(string[] args)
+    private static MongoInstitutionDataAdapter mongoDbAdapter  = new MongoInstitutionDataAdapter(
+        "mongodb+srv://AdminLu:&%406TmNYccF4k24iJ6kCh@academicjobs.lgwya1x.mongodb.net/?retryWrites=true&w=majority",
+        "Institutions", "institutionCollection");
+    
+    private static readonly int _delayInMs = 0;
+    private static readonly string _productVersion = "1.0";
+    private static readonly string _contactInformation = "Contact: lucas.schmutzler@s2018.tu-chemnitz.de";
+
+    private static ScraperService _scraperService;
+    public async Task RunExtractor(string inputPath)
     {
-        var mongoDbAdapter = new MongoInstitutionDataAdapter(
-            "mongodb+srv://AdminLu:&%406TmNYccF4k24iJ6kCh@academicjobs.lgwya1x.mongodb.net/?retryWrites=true&w=majority",
-            "Institutions", "institutionCollection");
-
-        // TEST CODE
-        try
-        {
-            Console.WriteLine("Start getting job listings from database.");
-            var allInts = await mongoDbAdapter.GetFullInstitutionsAsync();
-            Console.WriteLine($"Done. Database contains {allInts.Count} job listings.");
-
-            string searchUrl = "https://vsr.informatik.tu-chemnitz.de/about/people/gaedke/";
-
-            var bestMatch = await FindMatch.FindBestUrlMatchAcrossInstitution(allInts, searchUrl);
-            Console.WriteLine(bestMatch != null ? bestMatch.InstitutionDetails.Url : "No match found");
-
-            Console.ReadLine();
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine(e);
-            Console.ReadLine();
-        }
-        // END TEST CODE
-
-
-        string inputPath =
-            "C:\\Users\\g4m3r\\source\\repos\\GeritScraper\\GeritScraper\\bin\\Debug\\net6.0\\Output_new";
-
+        _scraperService = new ScraperService(_contactInformation, _productVersion, _delayInMs);
+        
         // Get all Json Files (one file represents one institution)
         string[] filePaths = Directory.GetFiles(inputPath, "*.json", SearchOption.AllDirectories);
 
@@ -51,7 +34,7 @@ public class Program
             {
                 var institute = DeserializeSingleInstituteFromFile(path);
                 var url = $"https://www.gerit.org/de/institutiondetail/{institute.Id}";
-                await Console.Out.WriteLineAsync(
+                Debug.WriteLine(
                     $"Found {institute.Name.De}, ID: {institute.Id}, Url: {url}"); // TODO log to file
 
                 allInstitutes.Add(institute);
@@ -68,11 +51,11 @@ public class Program
         }
 
         var allInstitutesInDb = await mongoDbAdapter.GetFullInstitutionsAsync();
-        Console.WriteLine($"{allInstitutesInDb.Count} Institutions in DB.");
-        Console.WriteLine("Ended");
+        Debug.WriteLine($"{allInstitutesInDb.Count} Institutions in DB.");
+        Debug.WriteLine("Ended");
     }
-
-    static async Task LoopTreeChildren(List<ChildrenItem> children)
+    
+    private static async Task LoopTreeChildren(List<ChildrenItem> children)
     {
         if (children == null || !children.Any())
             return;
@@ -90,12 +73,12 @@ public class Program
     private static async Task ProcessChild(ChildrenItem child)
     {
         var url = $"https://www.gerit.org/de/institutiondetail/{child.Id}";
-        Console.WriteLine($"    Found Child {child.Name.De}, ID: {child.Id}, Url: {url}"); // TODO log to file
+        Debug.WriteLine($"    Found Child {child.Name.De}, ID: {child.Id}, Url: {url}"); // TODO log to file
 
         try
         {
             // Get Json and parse it into a C# object
-            var jsonString = await ScraperService.ScrapeJsonStringFromUrlAsync(url);
+            var jsonString = await _scraperService.ScrapeJsonStringFromUrlAsync(url);
             var institutionDetails = DeserializeSingleInstitute(jsonString);
 
             // Clear Tree to reduce duplicate data
@@ -105,12 +88,11 @@ public class Program
         }
         catch (Exception e)
         {
-            // TODO log to file
-            Console.WriteLine(e.Message);
+            Debug.WriteLine(e.Message);
         }
     }
 
-    static Institution DeserializeSingleInstituteFromFile(string jsonFilePath)
+    private static Institution DeserializeSingleInstituteFromFile(string jsonFilePath)
     {
         if (!File.Exists(jsonFilePath))
         {
@@ -123,7 +105,7 @@ public class Program
         return DeserializeSingleInstitute(jsonContent);
     }
 
-    static Institution DeserializeSingleInstitute(string jsonContent)
+    private static Institution DeserializeSingleInstitute(string jsonContent)
     {
         // JSON Serialization Settings
         var jsonSettings = new JsonSerializerSettings
@@ -148,7 +130,7 @@ public class Program
         }
         catch (Exception e)
         {
-            Console.WriteLine($"An error happened while deserialization: {e}");
+            Debug.WriteLine($"An error happened while deserialization: {e}");
             throw;
         }
     }

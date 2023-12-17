@@ -5,15 +5,15 @@ VisualStudioVersion = 17.5.33627.172
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GeritScraper.Console", "GeritScraper\GeritScraper.Console.csproj", "{029A51EA-F494-4C0C-9458-1C0FDA9B8E9A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GeritScraper.InstituteHtml", "GericScraper.InstituteHtml\GeritScraper.InstituteHtml.csproj", "{E700C132-94A5-400D-A648-D0F7544B861F}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GeritScraper.Common", "GeritScraper.Common\GeritScraper.Common.csproj", "{61DC6A05-E976-4324-B8AB-B5FFCD293F83}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GeritScraper.JsonExtractor.Console.Test", "GeritScraper.JsonExtractor.Console.Test\GeritScraper.JsonExtractor.Console.Test.csproj", "{F72B693E-7E67-4118-9201-A3AB5F3EE2A9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GeritScraper.JsonExtractor.Console", "GeritScraper.JsonExtractor.Console\GeritScraper.JsonExtractor.Console.csproj", "{F72B693E-7E67-4118-9201-A3AB5F3EE2A9}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GeritScraper.DataModels", "GeritScraper.DataModels\GeritScraper.DataModels.csproj", "{2DCB8069-E619-4DE0-AC28-238C3ADCCD3C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GeritScraper.DataAdapter", "GeritScraper.DataAdapter\GeritScraper.DataAdapter.csproj", "{C1BEE16C-7487-41C6-97F8-9A27BBFEA675}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GeritScraper.JsonExtractor", "GeritScraper.JsonExtractor\GeritScraper.JsonExtractor.csproj", "{A7158FF5-8CFE-4C0A-B77F-BB31E480DECD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -25,10 +25,6 @@ Global
 		{029A51EA-F494-4C0C-9458-1C0FDA9B8E9A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{029A51EA-F494-4C0C-9458-1C0FDA9B8E9A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{029A51EA-F494-4C0C-9458-1C0FDA9B8E9A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{E700C132-94A5-400D-A648-D0F7544B861F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E700C132-94A5-400D-A648-D0F7544B861F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E700C132-94A5-400D-A648-D0F7544B861F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E700C132-94A5-400D-A648-D0F7544B861F}.Release|Any CPU.Build.0 = Release|Any CPU
 		{61DC6A05-E976-4324-B8AB-B5FFCD293F83}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{61DC6A05-E976-4324-B8AB-B5FFCD293F83}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{61DC6A05-E976-4324-B8AB-B5FFCD293F83}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -45,6 +41,10 @@ Global
 		{C1BEE16C-7487-41C6-97F8-9A27BBFEA675}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C1BEE16C-7487-41C6-97F8-9A27BBFEA675}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C1BEE16C-7487-41C6-97F8-9A27BBFEA675}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A7158FF5-8CFE-4C0A-B77F-BB31E480DECD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A7158FF5-8CFE-4C0A-B77F-BB31E480DECD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A7158FF5-8CFE-4C0A-B77F-BB31E480DECD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A7158FF5-8CFE-4C0A-B77F-BB31E480DECD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

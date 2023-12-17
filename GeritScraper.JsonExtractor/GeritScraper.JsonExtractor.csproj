@@ -6,14 +6,10 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
-
     <ItemGroup>
-      <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-    </ItemGroup>
-
-
-    <ItemGroup>
-      <Folder Include="Models\" />
+      <ProjectReference Include="..\GeritScraper.Common\GeritScraper.Common.csproj" />
+      <ProjectReference Include="..\GeritScraper.DataAdapter\GeritScraper.DataAdapter.csproj" />
+      <ProjectReference Include="..\GeritScraper.DataModels\GeritScraper.DataModels.csproj" />
     </ItemGroup>
 
 </Project>
