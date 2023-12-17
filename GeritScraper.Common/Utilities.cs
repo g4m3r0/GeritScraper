@@ -7,8 +7,6 @@ public class Utilities
 {
     public static string GetInstitutionNameFromJson(string jsonString)
     {
-        // TODO handle excetions / null reference errors
-
         var jsonObj = JObject.Parse(jsonString);
         var institution = jsonObj["institution"];
         var fullName = institution["_fullName"]["de"]; // we could also use the english name using ["en"]

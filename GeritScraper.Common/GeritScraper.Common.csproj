@@ -25,12 +25,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Files\prompt.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\GeritScraper.DataModels\GeritScraper.DataModels.csproj" />
   </ItemGroup>
 
