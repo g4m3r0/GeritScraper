@@ -11,4 +11,6 @@ public class ChildrenItem
     public Institution? InstitutionDetails { get; set; }
 
     [JsonProperty("children")] public List<ChildrenItem> Children { get; set; }
+    
+    public bool IsChildExpanded { get; set; } = false;
 }

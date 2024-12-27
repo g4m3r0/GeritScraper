@@ -10,9 +10,7 @@ namespace GeritScraper.JsonExtractor;
 
 public class JsonExtractor
 {
-    private static readonly MongoInstitutionDataAdapter mongoDbAdapter = new(
-        "mongodb+srv://AdminLu:&%406TmNYccF4k24iJ6kCh@academicjobs.lgwya1x.mongodb.net/?retryWrites=true&w=majority",
-        "Institutions", "institutionCollection");
+    private MongoInstitutionDataAdapter mongoDbAdapter;
 
     private static readonly int _delayInMs = 0;
     private static readonly string _productVersion = "1.0";
@@ -22,30 +20,57 @@ public class JsonExtractor
 
     public async Task RunExtractor(string inputPath)
     {
-        _scraperService = new ScraperService(_contactInformation, _productVersion, _delayInMs);
-
-        // Get all Json Files (one file represents one institution)
-        var filePaths = Directory.GetFiles(inputPath, "*.json", SearchOption.AllDirectories);
-
-        var allInstitutes = new List<Institution>();
-
-        foreach (var path in filePaths)
+        try
         {
-            var institute = DeserializeSingleInstituteFromFile(path);
-            var url = $"https://www.gerit.org/de/institutiondetail/{institute.Id}";
-            Debug.WriteLine(
-                $"Found {institute.Name.De}, ID: {institute.Id}, Url: {url}");
-
-            allInstitutes.Add(institute);
-
-            await LoopTreeChildren(institute.Tree.Children);
-
-            await mongoDbAdapter.SaveOrUpdateInstitutionAsync(institute);
+            var mongoConnectionString = Environment.GetEnvironmentVariable("MONGO_CONNECTION_STRING") ??
+                                        "mongodb://admin:superSecurePassword!@mongo:27017";
+            mongoDbAdapter = new(
+                //"mongodb+srv://AdminLu:&%406TmNYccF4k24iJ6kCh@academicjobs.lgwya1x.mongodb.net/?retryWrites=true&w=majority",
+                mongoConnectionString,
+                "Institutions", "institutionCollection");
         }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+        
+        try
+        {
+            var allInstitutesInDb1 = await mongoDbAdapter.GetFullInstitutionsAsync();
+            Console.WriteLine($"{allInstitutesInDb1.Count} Institutions in DB.");
 
-        var allInstitutesInDb = await mongoDbAdapter.GetFullInstitutionsAsync();
-        Debug.WriteLine($"{allInstitutesInDb.Count} Institutions in DB.");
-        Debug.WriteLine("Ended");
+            _scraperService = new ScraperService(_contactInformation, _productVersion, _delayInMs);
+
+            // Get all Json Files (one file represents one institution)
+            Console.WriteLine($"Get all Json Files in {inputPath}");
+            var filePaths = Directory.GetFiles(inputPath, "*.json", SearchOption.AllDirectories);
+
+            var allInstitutes = new List<Institution>();
+
+            foreach (var path in filePaths)
+            {
+                var institute = DeserializeSingleInstituteFromFile(path);
+                var url = $"https://www.gerit.org/de/institutiondetail/{institute.Id}";
+                Console.WriteLine(
+                    $"Found {institute.Name.De}, ID: {institute.Id}, Url: {url}");
+
+                allInstitutes.Add(institute);
+
+                await LoopTreeChildren(institute.Tree.Children);
+
+                await mongoDbAdapter.SaveOrUpdateInstitutionAsync(institute);
+            }
+
+            var allInstitutesInDb = await mongoDbAdapter.GetFullInstitutionsAsync();
+            Console.WriteLine($"{allInstitutesInDb.Count} Institutions in DB.");
+            Console.WriteLine("Ended");
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
     }
 
     private static async Task LoopTreeChildren(List<ChildrenItem> children)
@@ -66,7 +91,7 @@ public class JsonExtractor
     private static async Task ProcessChild(ChildrenItem child)
     {
         var url = $"https://www.gerit.org/de/institutiondetail/{child.Id}";
-        Debug.WriteLine($"    Found Child {child.Name.De}, ID: {child.Id}, Url: {url}"); // TODO log to file
+        Console.WriteLine($"    Found Child {child.Name.De}, ID: {child.Id}, Url: {url}"); // TODO log to file
 
         try
         {
@@ -81,7 +106,7 @@ public class JsonExtractor
         }
         catch (Exception e)
         {
-            Debug.WriteLine(e.Message);
+            Console.WriteLine(e.Message);
         }
     }
 
@@ -120,7 +145,7 @@ public class JsonExtractor
         }
         catch (Exception e)
         {
-            Debug.WriteLine($"An error happened while deserialization: {e}");
+            Console.WriteLine($"An error happened while deserialization: {e}");
             throw;
         }
     }

@@ -17,6 +17,7 @@ public class Program
     private static readonly WebClient _wClient = new();
 
     private static string _databasePath = string.Empty;
+    private static string _inputPath = string.Empty;
     private static string _outputPath = string.Empty;
 
     private static readonly int _delayInMs = 0;
@@ -29,8 +30,19 @@ public class Program
     {
         // Setup initial value
         _scraperService = new ScraperService(_contactInformation, _productVersion, _delayInMs);
-        _databasePath = Directory.GetCurrentDirectory() + "\\Input\\institutionen_gerit.xlsx";
-        _outputPath = Directory.GetCurrentDirectory() + "\\Output\\";
+        _databasePath = Path.Combine(Directory.GetCurrentDirectory(), "Input", "institutionen_gerit.xlsx");
+        _inputPath = Path.Combine(Directory.GetCurrentDirectory(), "Input");
+        _outputPath = Path.Combine(Directory.GetCurrentDirectory(), "Output");
+
+        if (!Directory.Exists(_outputPath))
+        {
+            Directory.CreateDirectory(_outputPath);
+        }
+
+        if (!Directory.Exists(_inputPath))
+        {
+            Directory.CreateDirectory(_inputPath);
+        }
 
         // Run the Gerit Scraper to scrape all parent institutes to a json file
         await ScrapeGerit();
@@ -105,9 +117,11 @@ public class Program
                 await Console.Out.WriteLineAsync($"Success - Scraped {universityName} on {url}.");
 
                 if (!Directory.Exists(outputPath + universityName))
+                {
                     Directory.CreateDirectory(outputPath + universityName);
+                }
 
-                var outputFileName = outputPath + universityName + "\\" + url.Split('/').Last() + ".json";
+                var outputFileName = Path.Combine(outputPath + universityName, url.Split('/').Last() + ".json");
                 await File.WriteAllTextAsync(outputFileName, jsonString);
             }
             else
@@ -119,7 +133,7 @@ public class Program
             scrapeLog.Append($"{status},{url},{DateTime.Now.ToString()},{lastErrorMessage}{Environment.NewLine}");
         }
 
-        await File.WriteAllTextAsync(outputPath + "\\scrapeLog.csv", scrapeLog.ToString());
+        await File.WriteAllTextAsync(Path.Combine(outputPath, "scrapeLog.csv"), scrapeLog.ToString());
     }
 
     private static List<string> LoadUrlsFromCsv(string csvFilePath)
@@ -166,7 +180,7 @@ public class Program
 
     private static async Task ParseFilesForInstitutes()
     {
-        var outputPath = Directory.GetCurrentDirectory() + "\\Output\\";
+        var outputPath = Path.Combine(Directory.GetCurrentDirectory(), "Output");
 
         foreach (var dir in Directory.GetDirectories(outputPath))
         {
@@ -186,7 +200,7 @@ public class Program
                 var institutesJson = JsonConvert.SerializeObject(institutesWithUrls, Formatting.Indented);
 
                 // Save the JSON to a file
-                File.WriteAllText(dir + "\\institutes.json", institutesJson);
+                File.WriteAllText(Path.Combine(dir, "institutes.json"), institutesJson);
             }
         }
     }
